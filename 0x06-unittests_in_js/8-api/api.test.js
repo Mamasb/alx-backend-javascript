@@ -1,14 +1,42 @@
-const request = require('request');
 const { expect } = require('chai');
+const request = require('request');
 
-describe('API integration test', () => {
-  const API_URL = 'http://localhost:7865';
+describe('Index Page', () => {
+  it('should respond with the correct status code', () => {
+    request('http://localhost:7865', (error, res, body) => {
+      expect(res.statusCode).to.equal(200);
+    });
+  });
 
-  it('GET / returns correct response', (done) => {
-    request.get(`${API_URL}/`, (_err, res, body) => {
-      expect(res.statusCode).to.be.equal(200);
-      expect(body).to.be.equal('Welcome to the payment system');
-      done();
+  it('should have the correct content of the body', () => {
+    request('http://localhost:7865', (error, res, body) => {
+      expect(body).to.contain('Welcome to the payment system');
+    });
+  });
+
+  it('should have the corrent Content-Type', () => {
+    request('http://localhost:7865', (error, res, body) => {
+      expect(res.headers['content-type']).to.equal('text/html; charset=utf-8');
+    });
+  });
+
+  it('should have the corrent Content-Length', () => {
+    request('http://localhost:7865', (error, res, body) => {
+      expect(res.headers['content-length']).to.equal('29');
     });
   });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+

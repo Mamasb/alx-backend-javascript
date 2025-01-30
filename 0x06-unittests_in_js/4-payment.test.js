@@ -1,20 +1,33 @@
-const sinon = require('sinon');
 const Utils = require('./utils');
-const { expect } = require('chai');
 const sendPaymentRequestToApi = require('./4-payment');
+const chai = require('chai');
+const sinon = require('sinon');
 
-describe('sendPaymentRequestToApi', () => {
-  it('sendPaymentRequestToApi calls console.log with the right arguments', () => {
-    const bigBrother = sinon.spy(console);
-    const dummy = sinon.stub(Utils, 'calculateNumber');
+const expect = chai.expect;
 
-    dummy.returns(10);
+describe('sendPaymentRequestToApi', function () {
+  let calNumStub = null;
+
+  beforeEach(() => {
+    calNumStub = sinon.stub(Utils, 'calculateNumber').returns(10);
+  });
+
+  it('should be called with the two arguments', () => {
     sendPaymentRequestToApi(100, 20);
-    expect(dummy.calledWith('SUM', 100, 20)).to.be.true;
-    expect(dummy.callCount).to.be.equal(1);
-    expect(bigBrother.log.calledWith('The total is: 10')).to.be.true;
-    expect(bigBrother.log.callCount).to.be.equal(1);
-    dummy.restore();
-    bigBrother.log.restore();
+    expect(calNumStub.calledWith('SUM', 100, 20)).to.be.true;
+  });
+  it('should be called once with arguments', () => {
+    sendPaymentRequestToApi(100, 20);
+    expect(calNumStub.calledOnce).to.be.true;
+  });
+  it('should call console log with the correct sum parameter', () => {
+    sinon.spy(console, 'log');
+    sendPaymentRequestToApi(100, 20);
+    expect(console.log.calledWith('The total is: 10')).to.be.true;
+    console.log.restore();
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 });
